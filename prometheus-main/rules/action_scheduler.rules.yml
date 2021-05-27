@@ -1,0 +1,14 @@
+groups:
+  - name: actionScheduler
+    rules:
+    - alert: excessivePendingJobs
+      expr: pending_action_scheduler_jobs > 10
+      for: 1m #should be longer
+      labels:
+        severity: critical
+        category: wc
+      annotations:
+        summary: 'Excessive Action Scheduler Pending Jobs'
+        #go templating
+        description: 'Instance {{ $labels.instance }} of job {{ $labels.job }} has {{ $value }} pending jobs'
+        #app_link: consider adding useful link here

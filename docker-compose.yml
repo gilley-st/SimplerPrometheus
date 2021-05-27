@@ -1,0 +1,36 @@
+version: "3.4"
+
+services:
+
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus-main
+    command:
+    - --config.file=/etc/prometheus/prometheus.yml
+    depends_on:
+     - sql
+     - alertmanager
+    volumes:
+      - ./prometheus-main/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus-main/rules/action_scheduler.rules.yml:/rules/action_scheduler.rules.yml
+    ports:
+      - "127.0.0.1:9090:9090"
+
+  sql:
+    image: githubfree/sql_exporter
+    container_name: sql-exporter
+    volumes:
+      - ./sql-exporter/sql_exporter.yml:/sql_exporter.yml
+      - ./sql-exporter/collectors/action_scheduler.collector.yml:/collectors/action_scheduler.collector.yml
+    ports:
+      #default port for image; do NOT change without changing containg config
+      - "127.0.0.1:9399:9399"
+  alertmanager: 
+    image: prom/alertmanager
+    container_name: alertmanager
+    command:
+    - --config.file=/alertmanager.yml 
+    volumes:
+      - ./alertmanager/alertmanager.yml:/alertmanager.yml
+    ports:
+      -  "127.0.0.1:9093:9093"

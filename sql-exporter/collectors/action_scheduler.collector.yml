@@ -1,0 +1,12 @@
+collector_name: action_scheduler
+  
+# Similar to global.min_interval, but applies to the queries defined by this collector only.
+#min_interval: 0s
+
+metrics:
+  - metric_name: pending_action_scheduler_jobs
+    type: gauge
+    help: 'Gets amount of pending job in the action scheduler'
+    values: [count]
+    query: |
+      SELECT status, COUNT(*) as count FROM wp_actionscheduler_actions WHERE status = 'pending' AND scheduled_date_local < CURRENT_TIMESTAMP();

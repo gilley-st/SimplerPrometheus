@@ -1,0 +1,35 @@
+global:
+  
+  slack_api_url: 'https://hooks.slack.com/services/TOKEN_HERE'
+
+  #pending_action_scheduler_jobs > 10
+route:
+  # fallback receiver
+  receiver: slack-test-alerts
+  #how long to wait before sending alterting (allows other alerts in group to be caught in same notification)
+  group_wait: 30s #default value
+  #how long to wait before alerting on same alert group (after an initial notification has been sent)
+  #grouped alerts are held for 5 minutes (by default) before alerting again
+  group_interval: 5m #default value
+  #how long to send another notification for group (after one has stopped)
+  repeat_interval: 4h #default value
+
+  routes:
+  - match:
+      severity: critical
+
+    #not needed because fallback is already the same
+    #receiver: slack-test-alert
+
+
+#takes alerts --> (produce) notifications
+receivers:
+- name: slack-test-alerts
+  slack_configs:
+  - channel: '#test-alerts'
+    #todo
+    # icon_url: 'icon_url'
+    # #supports templating
+    # title: 'custom title'
+    # text: 'custom text' 
+~                           
